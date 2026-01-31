@@ -1,0 +1,13 @@
+tasks:
+  - id: TASK-001
+    title: "Strengthen PIN and Token Generation"
+    status: completed
+    priority: high
+    assignee: leonidas
+    created: 2026-01-13
+    updated: 2026-01-13
+    files:
+      - server/api/denuncia.post.ts
+      - server/utils/crypto.ts
+    context: |
+      Upgrade PIN to 6 digits using crypto.randomInt and Tokens to crypto.randomBytes/uuid.

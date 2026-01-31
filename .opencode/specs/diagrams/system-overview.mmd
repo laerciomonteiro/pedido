@@ -1,0 +1,103 @@
+%% System Overview - OpenCode Architecture
+%% File: .opencode/specs/diagrams/system-overview.mmd
+%% Generated: 2026-01-07
+
+flowchart TB
+    subgraph UserLayer["User Layer"]
+        U[User / Owner]
+        CLI[OpenCode CLI]
+    end
+
+    subgraph BootstrapLayer["Bootstrap Layer"]
+        BOOT[BOOTSTRAP.md]
+        MEM[Memory System]
+        TASK[Task System]
+    end
+
+    subgraph OrchestrationLayer["Orchestration Layer"]
+        direction TB
+        LEO[Leonidas<br/>Tech Lead<br/>Gemini Pro]
+        
+        subgraph Specialists["Specialist Agents"]
+            ARC[Architect<br/>Claude Opus]
+            PLN[Planning<br/>Claude Opus]
+            COD[Code<br/>Claude Opus]
+            RSH[Research<br/>Gemini Flash]
+            DBG[Debug<br/>Claude Opus]
+        end
+    end
+
+    subgraph KnowledgeLayer["Knowledge Layer"]
+        SKL[Skills]
+        CMD[Commands]
+        WFL[Workflows]
+    end
+
+    subgraph ExecutionLayer["Execution Layer"]
+        BASH[Bash Tool]
+        READ[Read Tool]
+        WRITE[Write Tool]
+        GLOB[Glob Tool]
+        GREP[Grep Tool]
+        EDIT[Edit Tool]
+        FETCH[WebFetch Tool]
+    end
+
+    subgraph ProjectLayer["Project"]
+        direction TB
+        
+        subgraph Frontend["frontend/"]
+            FE_SRC[src/]
+            FE_COMP[components/]
+        end
+        
+        subgraph Backend["backend/"]
+            HUB[api/]
+        end
+        
+        subgraph Docs["Documentation"]
+            ARCH[ARCHITECTURE.md]
+            AGENTS[AGENTS.md files]
+        end
+    end
+
+    %% Connections
+    U --> CLI
+    CLI --> BOOT
+    BOOT --> MEM
+    BOOT --> TASK
+    MEM --> LEO
+    TASK --> LEO
+    
+    LEO --> ARC
+    LEO --> PLN
+    LEO --> COD
+    LEO --> RSH
+    LEO --> DBG
+    
+    SKL --> ARC & PLN & COD & RSH & DBG
+    CMD --> LEO
+    WFL --> LEO
+    
+    ARC & PLN & COD & RSH & DBG --> BASH & READ & WRITE & GLOB & GREP & EDIT & FETCH
+    
+    BASH & READ & WRITE & GLOB & GREP & EDIT --> Frontend
+    BASH & READ & WRITE & GLOB & GREP & EDIT --> Backend
+    BASH & READ & WRITE & GLOB & GREP & EDIT --> Docs
+
+    %% Styling
+    style U fill:#FFD700,stroke:#333,color:#000
+    style LEO fill:#9333EA,stroke:#333,color:#fff
+    style ARC fill:#F59E0B,stroke:#333,color:#000
+    style PLN fill:#8B5CF6,stroke:#333,color:#fff
+    style COD fill:#10B981,stroke:#333,color:#fff
+    style RSH fill:#3B82F6,stroke:#333,color:#fff
+    style DBG fill:#EF4444,stroke:#333,color:#fff
+    
+    style BOOT fill:#4ADE80,stroke:#333,color:#000
+    style MEM fill:#60A5FA,stroke:#333,color:#000
+    style TASK fill:#FBBF24,stroke:#333,color:#000
+    
+    style FE_SRC fill:#818CF8,stroke:#333,color:#fff
+    style FE_COMP fill:#A78BFA,stroke:#333,color:#fff
+    style HUB fill:#34D399,stroke:#333,color:#000

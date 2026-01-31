@@ -1,0 +1,6 @@
+[
+  { "id": "1", "content": "Analyze codebase to find PIN/Token generation logic", "status": "completed", "priority": "high" },
+  { "id": "2", "content": "Update generatePin to use 6 digits and crypto.randomInt", "status": "completed", "priority": "high" },
+  { "id": "3", "content": "Update generateToken to use crypto.randomBytes or uuid", "status": "completed", "priority": "high" },
+  { "id": "4", "content": "Verify changes and run tests", "status": "completed", "priority": "medium" }
+]

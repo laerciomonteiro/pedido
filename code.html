@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nossa história...</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b5b",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#181113",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .polaroid {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+        }
+        .polaroid img {
+            transition: transform 0.3s ease;
+        }
+        .polaroid:hover img {
+            transform: scale(1.02);
+        }
+        .heart-beat {
+            animation: heartbeat 1.5s infinite ease-in-out;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .bg-gradient-romantic {
+            background: radial-gradient(circle at center, #2d181c 0%, #181113 100%);
+        }
+        .music-player {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .music-player:hover {
+            transform: scale(1.02);
+        }
+        .player-progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #ee2b5b;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(238,43,91,0.5);
+        }
+        .playlist-item {
+            transition: all 0.3s ease;
+        }
+        .playlist-item:hover {
+            background: rgba(238,43,91,0.2);
+        }
+        .playlist-item.active {
+            background: rgba(238,43,91,0.3);
+            border-left: 3px solid #ee2b5b;
+        }
+        .vinyl-spin {
+            animation: spin 3s linear infinite;
+            animation-play-state: paused;
+        }
+        .vinyl-spin.playing {
+            animation-play-state: running;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .equalizer-bar {
+            animation: equalize 0.5s ease-in-out infinite alternate;
+        }
+        .equalizer-bar:nth-child(1) { animation-delay: 0s; }
+        .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
+        .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
+        .equalizer-bar:nth-child(4) { animation-delay: 0.3s; }
+        @keyframes equalize {
+            from { height: 4px; }
+            to { height: 16px; }
+        }
+        .equalizer-bar.paused {
+            animation-play-state: paused;
+        }
+        .polaroid {
+            position: relative;
+            overflow: hidden;
+        }
+        .polaroid .absolute {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            #musicPlayer {
+                width: 320px;
+                right: 0;
+                bottom: 18rem;
+            }
+            #musicPlayerContainer {
+                bottom: 4;
+                right: 4;
+            }
+        }
+        @media (max-width: 480px) {
+            #musicPlayer {
+                width: calc(100vw - 2rem);
+                right: 1rem;
+                left: 1rem;
+                bottom: 5.5rem;
+            }
+            #musicPlayerContainer {
+                left: 1rem;
+                right: 1rem;
+                bottom: 1rem;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<!-- Nav Bar -->
+<div class="relative flex w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-10 md:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#39282c] px-4 md:px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="text-primary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1">favorite</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Nossa História</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Linha do Tempo</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Memórias</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">O Pedido</a>
+</div>
+</div>
+        </header>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex flex-col items-center">
+<!-- Polaroid Grid Section -->
+<div class="max-w-[1200px] w-full px-4 md:px-10 py-10">
+<h4 class="text-[#b99da4] text-sm font-bold leading-normal tracking-[0.015em] px-4 py-2 text-center mb-8 uppercase">Momentos Especiais</h4>
+<div class="flex flex-wrap justify-center gap-8 md:gap-12 py-10">
+<!-- Polaroid 1 -->
+<div class="polaroid rotate-[-3deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid1.jpg', 'O começo de tudo...')">
+<div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple laughing together in a park" style='background-image: url("assets/img/polaroid1.jpg");'></div>
+<p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">O começo de tudo...</p>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
+</div>
+</div>
+<!-- Polaroid 2 -->
+<div class="polaroid rotate-[2deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid2.jpg', 'Nosso primeiro date')">
+<div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple eating ice cream together" style='background-image: url("assets/img/polaroid2.jpg");'></div>
+<p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Nosso primeiro date</p>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
+</div>
+</div>
+<!-- Polaroid 3 -->
+<div class="polaroid rotate-[-1deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid3.jpg', 'Aquele pôr do sol')">
+<div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple watching the sunset" style='background-image: url("assets/img/polaroid3.jpg");'></div>
+<p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Aquele pôr do sol</p>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
+</div>
+</div>
+<!-- Polaroid 4 -->
+<div class="polaroid rotate-[4deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid4.jpg', 'Dançando na chuva')">
+<div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple dancing at a wedding" style='background-image: url("assets/img/polaroid4.jpg");'></div>
+<p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Dançando na chuva</p>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Headline Text -->
+<div class="max-w-[800px] text-center px-6">
+<h2 class="text-white tracking-light text-[32px] md:text-[48px] font-bold leading-tight pb-3 pt-5">
+                Cada dia com você é uma nova página...
+            </h2>
+<p class="text-[#b99da4] text-lg leading-relaxed max-w-2xl mx-auto">
+                Desde o momento em que te conheci pessoalmente, percebi aos poucos como você se encaixava direitinho no meu mundo. 
+                Cada sorriso seu é gostoso de ver, e cada abraço é o meu lugar seguro.
+                Você é a peça que faltava no meu quebra-cabeça.
+            </p>
+</div>
+<!-- Hero / Question Section -->
+<div class="layout-content-container flex flex-col max-w-[960px] w-full py-16">
+<div class="@container">
+<div class="@[480px]:p-4">
+<div class="flex min-h-[500px] flex-col gap-8 bg-cover bg-center bg-no-repeat @[480px]:gap-10 @[480px]:rounded-3xl items-center justify-center p-8 relative overflow-hidden bg-gradient-romantic border border-primary/20 shadow-2xl shadow-primary/10" data-alt="Abstract romantic red and dark gradient background">
+<div class="z-10 flex flex-col gap-4 text-center">
+<div class="flex justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-6xl heart-beat" style="font-variation-settings: 'FILL' 1">favorite</span>
+</div>
+<h1 class="text-white text-5xl font-black leading-tight tracking-[-0.033em] @[480px]:text-7xl">
+                                Quer namorar comigo?
+                            </h1>
+<p class="text-white/80 text-base @[480px]:text-xl font-normal leading-normal max-w-xl mx-auto">
+                                Quero construir um futuro ao seu lado, enfrentar os desafios e celebrar as vitórias juntos. Aceita?
+                            </p>
+</div>
+<!-- Buttons Section -->
+<div class="z-10 flex flex-wrap gap-6 justify-center mt-6 items-center">
+<!-- Sim Button -->
+<button class="flex min-w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-white text-xl font-bold leading-normal tracking-[0.015em] shadow-lg shadow-primary/40 hover:scale-110 transition-transform active:scale-95 group" id="yesBtn">
+<span class="flex items-center gap-2">Sim ❤️</span>
+</button>
+<!-- Não Button (Interactive displacement target) -->
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-transparent border-2 border-white/20 text-white/60 text-lg font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-all" id="noBtn">
+<span>Não</span>
+</button>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute top-10 left-10 text-primary/10 rotate-12">
+<span class="material-symbols-outlined text-9xl">favorite</span>
+</div>
+<div class="absolute bottom-10 right-10 text-primary/10 -rotate-12">
+<span class="material-symbols-outlined text-9xl">favorite</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Image Modal (Hidden) -->
+<div class="hidden fixed inset-0 z-50 bg-background-dark/95 flex flex-col items-center justify-center p-4" id="imageModal">
+<div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+<button class="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+<div class="bg-[#2d181c]/95 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-primary/30 overflow-hidden p-4">
+<img id="modalImage" src="" alt="Foto ampliada" class="max-w-full max-h-[80vh] rounded-lg object-contain">
+<div class="mt-4 text-center">
+<h3 id="modalCaption" class="text-white text-xl font-bold mb-2"></h3>
+<p class="text-[#b99da4] text-sm">Um momento especial da nossa história</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Celebration Section (Hidden) -->
+<div class="hidden fixed inset-0 z-50 bg-background-dark/95 flex flex-col items-center justify-center p-4" id="celebration">
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<!-- Visual Firework Placeholders using Gradients -->
+<div class="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-primary shadow-[0_0_100px_40px_rgba(238,43,91,0.6)]"></div>
+<div class="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_120px_50px_rgba(250,204,21,0.5)]"></div>
+<div class="absolute bottom-1/4 left-1/2 w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_100px_40px_rgba(96,165,250,0.5)]"></div>
+</div>
+<div class="z-50 text-center animate-bounce">
+<h2 class="text-white text-6xl md:text-8xl font-black mb-4">Amo você!</h2>
+<div class="w-64 h-64 md:w-96 md:h-96 mx-auto rounded-full border-8 border-primary overflow-hidden shadow-2xl shadow-primary/50 mb-8">
+<div class="w-full h-full bg-center bg-cover" data-alt="The couple's best photo together" style='background-image: url("assets/img/celebration.jpg");'></div>
+</div>
+<p class="text-white text-2xl font-medium tracking-widest uppercase">Laercio & Bruna</p>
+<button class="mt-8 px-6 py-2 bg-white/10 text-white rounded-full hover:bg-white/20" onclick="document.getElementById('celebration').classList.add('hidden')">Fechar</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-10 border-t border-white/5 mt-10">
+<div class="max-w-[960px] mx-auto text-center">
+<p class="text-white/40 text-sm italic">Feito com amor, para o meu amor.</p>
+</div>
+</footer>
+<!-- Interactive script for the 'No' button effect -->
+<!-- Added as requested by the description of the screen 'The No button should appear to dodge the cursor' -->
+<script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const celebration = document.getElementById('celebration');
+
+        // Note: For actual interactivity, standard JS event listeners would be used.
+        // This script is to showcase the logic intended.
+        noBtn.addEventListener('mouseover', function() {
+            const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.style.zIndex = '100';
+        });
+
+        yesBtn.addEventListener('click', function() {
+            celebration.classList.remove('hidden');
+        });
+    </script>
+
+<!-- Floating Music Player -->
+<div class="fixed bottom-6 right-6 z-40" id="musicPlayerContainer">
+    <button class="w-14 h-14 rounded-full bg-primary shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-110 transition-transform duration-300" id="playerToggle" onclick="togglePlayer()">
+        <span class="material-symbols-outlined text-white text-3xl" id="toggleIcon">music_note</span>
+    </button>
+    <div class="absolute bottom-20 right-0 w-80 music-player opacity-0 invisible pointer-events-none" id="musicPlayer">
+        <div class="bg-[#2d181c]/95 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-primary/30 overflow-hidden">
+            <div class="p-4">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-pink-600 flex items-center justify-center vinyl-spin" id="vinyl">
+                        <div class="w-4 h-4 rounded-full bg-[#181113]"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-white font-bold text-sm truncate" id="songTitle">Música 1</h4>
+                        <p class="text-[#b99da4] text-xs truncate" id="artistName">Artista</p>
+                    </div>
+                    <div class="flex items-end gap-0.5 h-4" id="equalizer">
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-white/60 text-xs" id="currentTime">0:00</span>
+                    <input type="range" class="flex-1 h-1 bg-white/20 rounded-full appearance-none player-progress" id="progressBar" value="0" min="0" max="100">
+                    <span class="text-white/60 text-xs" id="duration">0:00</span>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="prevSong()">
+                        <span class="material-symbols-outlined">skip_previous</span>
+                    </button>
+                    <button class="w-12 h-12 rounded-full bg-primary flex items-center justify-center hover:scale-110 transition-transform" id="playBtn" onclick="togglePlay()">
+                        <span class="material-symbols-outlined text-white">play_arrow</span>
+                    </button>
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="nextSong()">
+                        <span class="material-symbols-outlined">skip_next</span>
+                    </button>
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="toggleMute()">
+                        <span class="material-symbols-outlined" id="volumeIcon">volume_up</span>
+                    </button>
+                </div>
+            </div>
+            <div class="max-h-48 overflow-y-auto" id="playlistContainer">
+                <div class="p-2 space-y-1" id="playlist">
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer active" onclick="playSong(0)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">At Last - Etta James</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Etta James</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(1)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Perfect - Ed Sheeran</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Ed Sheeran</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(2)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Thinking Out Loud - Ed Sheeran</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Ed Sheeran</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(3)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">All of Me - John Legend</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">John Legend</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(4)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">A Thousand Years - Christina Perri</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Christina Perri</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(5)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Can't Help Falling in Love - Elvis Presley</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Elvis Presley</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const playlist = [
+        { title: "At Last", artist: "Etta James" },
+        { title: "Perfect", artist: "Ed Sheeran" },
+        { title: "Thinking Out Loud", artist: "Ed Sheeran" },
+        { title: "All of Me", artist: "John Legend" },
+        { title: "A Thousand Years", artist: "Christina Perri" },
+        { title: "Can't Help Falling in Love", artist: "Elvis Presley" }
+    ];
+    
+    let currentSong = 0;
+    let isPlaying = false;
+    let isMuted = false;
+    let progress = 0;
+    let progressInterval;
+
+    function togglePlayer() {
+        const player = document.getElementById('musicPlayer');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (player.classList.contains('opacity-0')) {
+            player.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+            player.classList.add('opacity-100', 'visible', 'pointer-events-auto');
+            toggleIcon.textContent = 'close';
+        } else {
+            player.classList.remove('opacity-100', 'visible', 'pointer-events-auto');
+            player.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+            toggleIcon.textContent = 'music_note';
+        }
+    }
+
+    function togglePlay() {
+        isPlaying = !isPlaying;
+        const playBtn = document.getElementById('playBtn');
+        const vinyl = document.getElementById('vinyl');
+        const bars = document.querySelectorAll('.equalizer-bar');
+        
+        if (isPlaying) {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">pause</span>';
+            vinyl.classList.add('playing');
+            bars.forEach(bar => bar.classList.remove('paused'));
+            startProgress();
+        } else {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">play_arrow</span>';
+            vinyl.classList.remove('playing');
+            bars.forEach(bar => bar.classList.add('paused'));
+            stopProgress();
+        }
+    }
+
+    function playSong(index) {
+        currentSong = index;
+        updateSongInfo();
+        updatePlaylistActive();
+        if (!isPlaying) {
+            togglePlay();
+        }
+        progress = 0;
+        updateProgress();
+    }
+
+    function nextSong() {
+        currentSong = (currentSong + 1) % playlist.length;
+        playSong(currentSong);
+    }
+
+    function prevSong() {
+        currentSong = (currentSong - 1 + playlist.length) % playlist.length;
+        playSong(currentSong);
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        const volumeIcon = document.getElementById('volumeIcon');
+        volumeIcon.textContent = isMuted ? 'volume_off' : 'volume_up';
+    }
+
+    function updateSongInfo() {
+        document.getElementById('songTitle').textContent = playlist[currentSong].title;
+        document.getElementById('artistName').textContent = playlist[currentSong].artist;
+    }
+
+    function updatePlaylistActive() {
+        const items = document.querySelectorAll('.playlist-item');
+        items.forEach((item, index) => {
+            if (index === currentSong) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    function startProgress() {
+        progressInterval = setInterval(() => {
+            progress += 0.5;
+            if (progress >= 100) {
+                nextSong();
+                progress = 0;
+            }
+            updateProgress();
+        }, 500);
+    }
+
+    function stopProgress() {
+        clearInterval(progressInterval);
+    }
+
+    function updateProgress() {
+        document.getElementById('progressBar').value = progress;
+        const currentMinutes = Math.floor((progress / 100) * 3);
+        const currentSeconds = Math.floor(((progress / 100) * 3 * 60) % 60);
+        const totalMinutes = 3;
+        const totalSeconds = 0;
+        
+        document.getElementById('currentTime').textContent = 
+            `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
+        document.getElementById('duration').textContent = 
+            `${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+    }
+
+    document.getElementById('progressBar').addEventListener('input', (e) => {
+        progress = parseFloat(e.target.value);
+        updateProgress();
+    });
+
+    // Autoplay ao carregar a página
+    window.addEventListener('load', function() {
+        // O player já está visível, só começar a tocar
+        setTimeout(() => {
+            togglePlay();
+        }, 300);
+    });
+
+    // Image Modal Functions
+    function openModal(imageSrc, caption) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+        
+        modalImage.src = imageSrc;
+        modalCaption.textContent = caption;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // Close modal on ESC key or click outside
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+</script>
+</body></html>

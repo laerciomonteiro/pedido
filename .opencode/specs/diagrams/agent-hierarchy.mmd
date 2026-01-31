@@ -1,0 +1,85 @@
+%% Agent Hierarchy and Delegation Flow
+%% File: .opencode/specs/diagrams/agent-hierarchy.mmd
+%% Generated: 2026-01-07
+
+flowchart TD
+    subgraph HumanLayer["Human Layer"]
+        F[Project Owner<br/>Final Authority]
+    end
+
+    subgraph OrchestratorLayer["Orchestrator Layer"]
+        L[Leonidas<br/>Autonomous Tech Lead<br/>Gemini Pro<br/>1M Context]
+    end
+
+    subgraph SpecialistLayer["Specialist Layer"]
+        direction LR
+        
+        subgraph DesignTeam["Design Team"]
+            A[Architect<br/>Claude Opus<br/>Specs Only]
+            P[Planning<br/>Claude Opus<br/>RFCs & Plans]
+        end
+        
+        subgraph ExecutionTeam["Execution Team"]
+            C[Code<br/>Claude Opus<br/>Implementation]
+            D[Debug<br/>Claude Opus<br/>Root Cause]
+        end
+        
+        subgraph SupportTeam["Support Team"]
+            R[Research<br/>Gemini Flash<br/>Discovery]
+        end
+    end
+
+    subgraph OutputLayer["Output Layer"]
+        DOCS[docs/<br/>rfcs/<br/>specs/]
+        TASKS[tasks/<br/>plans/]
+        SRC[src/<br/>apps/<br/>code]
+        BUGS[bug fixes<br/>patches]
+        WIKI[wiki/<br/>research]
+    end
+
+    %% Hierarchy connections
+    F -->|"Directives"| L
+    L -->|"Orchestrates"| A & P & C & D & R
+
+    %% Output connections
+    A -->|"Creates"| DOCS
+    P -->|"Creates"| TASKS
+    C -->|"Creates"| SRC
+    D -->|"Creates"| BUGS
+    R -->|"Creates"| WIKI
+
+    %% Cross-agent communication
+    A -.->|"Specs to"| C
+    P -.->|"Tasks to"| C
+    D -.->|"Analysis to"| C
+    R -.->|"Research to"| A & P
+
+    %% Feedback loops
+    C -.->|"Review request"| A
+    D -.->|"Root cause"| L
+    
+    %% Styling
+    style F fill:#FFD700,stroke:#333,stroke-width:3px,color:#000
+    style L fill:#9333EA,stroke:#333,stroke-width:2px,color:#fff
+    style A fill:#F59E0B,stroke:#333,color:#000
+    style P fill:#8B5CF6,stroke:#333,color:#fff
+    style C fill:#10B981,stroke:#333,color:#fff
+    style R fill:#3B82F6,stroke:#333,color:#fff
+    style D fill:#EF4444,stroke:#333,color:#fff
+    
+    style DOCS fill:#FEF3C7,stroke:#333,color:#000
+    style TASKS fill:#E0E7FF,stroke:#333,color:#000
+    style SRC fill:#D1FAE5,stroke:#333,color:#000
+    style BUGS fill:#FEE2E2,stroke:#333,color:#000
+    style WIKI fill:#DBEAFE,stroke:#333,color:#000
+
+%% Agent Selection Matrix
+%% 
+%% | Task Type                    | Agent     | Model        |
+%% |------------------------------|-----------|--------------|
+%% | Architecture, Design, RFCs   | architect | Claude Opus  |
+%% | Strategic Planning           | planning  | Claude Opus  |
+%% | Implementation, Refactoring  | code      | Claude Opus  |
+%% | Research, Exploration        | research  | Gemini Flash |
+%% | Debugging, Root Cause        | debug     | Claude Opus  |
+%% | Multi-step Orchestration     | leonidas  | Gemini Pro   |

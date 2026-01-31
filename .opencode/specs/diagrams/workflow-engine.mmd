@@ -1,0 +1,97 @@
+%% Workflow Engine State Machine
+%% File: .opencode/specs/diagrams/workflow-engine.mmd
+%% Generated: 2026-01-07
+
+stateDiagram-v2
+    [*] --> Created: Create Workflow Instance
+
+    Created --> Pending: Initialize
+    
+    state Pending {
+        [*] --> ValidatingInputs
+        ValidatingInputs --> InputsValid: All inputs present
+        ValidatingInputs --> WaitingForInputs: Missing inputs
+        WaitingForInputs --> ValidatingInputs: Inputs provided
+        InputsValid --> [*]
+    }
+
+    Pending --> Running: Start Execution
+    
+    state Running {
+        [*] --> SelectNextStep
+        
+        SelectNextStep --> CheckDependencies: Step found
+        SelectNextStep --> AllStepsComplete: No more steps
+        
+        CheckDependencies --> ExecuteStep: Dependencies met
+        CheckDependencies --> Waiting: Dependencies not met
+        
+        Waiting --> CheckDependencies: Dependency completed
+        
+        ExecuteStep --> StepSuccess: Step completed
+        ExecuteStep --> StepFailed: Step failed
+        
+        StepSuccess --> SelectNextStep
+        StepFailed --> RetryLogic
+        
+        RetryLogic --> ExecuteStep: Retry available
+        RetryLogic --> HandleFailure: Max retries reached
+        
+        HandleFailure --> SelectNextStep: Continue with fallback
+        HandleFailure --> [*]: Abort workflow
+        
+        AllStepsComplete --> [*]
+    }
+
+    Running --> Completed: All steps successful
+    Running --> Failed: Unrecoverable failure
+    Running --> Paused: User intervention
+    
+    Paused --> Running: Resume
+    Paused --> Cancelled: User cancellation
+    
+    Failed --> Running: Retry from failure point
+    Failed --> Cancelled: Give up
+    
+    Completed --> Archived: Archive workflow
+    Cancelled --> Archived: Archive workflow
+    
+    Archived --> [*]
+
+%% Step Execution Detail
+%%
+%% sequenceDiagram
+%%     participant W as Workflow Engine
+%%     participant S as Step
+%%     participant A as Agent
+%%     participant T as Tools
+%%     
+%%     W->>S: Execute Step
+%%     S->>A: Delegate to Agent
+%%     A->>T: Use Tools
+%%     T-->>A: Results
+%%     A-->>S: Step Output
+%%     S-->>W: Step Complete
+%%     W->>W: Update State
+%%     W->>W: Select Next Step
+
+%% Workflow Definition Schema
+%%
+%% workflow:
+%%   id: string
+%%   name: string
+%%   description: string
+%%   version: string
+%%   
+%% steps:
+%%   - id: string
+%%     name: string
+%%     agent: architect|planning|code|research|debug
+%%     inputs: [string]
+%%     outputs: [string]
+%%     depends_on: [string]
+%%     condition: string (optional)
+%%     timeout: duration (optional)
+%%     retry:
+%%       max_attempts: number
+%%       on_failure: step_id

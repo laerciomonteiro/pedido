@@ -1,0 +1,300 @@
+---
+# ==============================================================================
+# NEXUSOS RFC (REQUEST FOR COMMENTS) TEMPLATE v2.0
+# ==============================================================================
+# Naming: ISSUE-{ID}-RFC-{RFC_ID}-{kebab-case-topic}.mdx
+# Location: Same folder as parent issue
+# Purpose: Research/briefing before implementation
+# ==============================================================================
+
+id: "ISSUE-XXX-RFC-XX"
+type: "rfc"
+version: "1.0"
+title: "RFC: [Research Topic]"
+
+# Parent Relationship
+parent_issue: "ISSUE-XXX"
+parent_issue_link: "./ISSUE-XXX-description.mdx"
+rfc_id: "RFC-XX"
+
+# Status
+status: "DRAFT"          # DRAFT | IN_RESEARCH | REVIEW | ACCEPTED | REJECTED | SUPERSEDED
+
+# Classification
+rfc_type: "RESEARCH"     # RESEARCH | COMPARISON | ARCHITECTURE | SECURITY | PERFORMANCE
+scope: "FOCUSED"         # FOCUSED | EXPLORATORY | COMPREHENSIVE
+
+# Context
+project: "vibeos-react"
+domain: "Frontend"
+
+# Temporal
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
+deadline: null
+author: "Name (Role)"
+reviewers: []
+
+# Research Parameters
+research:
+  question: "What is the best approach to [X]?"
+  hypothesis: "We believe [A] because [B]"
+  success_criteria: "Clear recommendation provided"
+  time_budget: "4h"
+
+# Target Audience
+target_audience: "DEV"   # DEV | ARCHITECT | STAKEHOLDER | ALL
+
+# Tags
+tags:
+  - "rfc"
+  - "research"
+---
+
+# [ISSUE-XXX] RFC: {rfc_id} - Research Topic
+
+> **Project**: `{project}`
+> **Domain**: {domain}
+> **Audience**: {target_audience}
+
+| Attribute | Value |
+|-----------|-------|
+| **Parent Issue** | [{parent_issue}]({parent_issue_link}) |
+| **RFC ID** | `{rfc_id}` |
+| **Type** | `{rfc_type}` |
+| **Status** | `{status}` |
+| **Author** | {author} |
+
+---
+
+## Executive Summary
+
+*2-3 sentence summary of question, findings, and recommendation.*
+
+**Bottom Line**: *One sentence recommendation*
+
+---
+
+## Research Objective
+
+### Primary Question
+
+> {research.question}
+
+### Hypothesis
+
+> {research.hypothesis}
+
+### Success Criteria
+
+- [ ] *Criterion 1*
+- [ ] *Criterion 2*
+- [ ] Clear recommendation provided
+
+### Scope
+
+| In Scope | Out of Scope |
+|----------|--------------|
+| *What we research* | *What we exclude* |
+
+---
+
+## Methodology
+
+### Approach
+
+1. **Discovery**: How information gathered
+2. **Analysis**: How options evaluated
+3. **Synthesis**: How conclusions drawn
+
+### Sources
+
+| Type | Sources |
+|------|---------|
+| Official Docs | *Links* |
+| Codebase | *Files examined* |
+| Libraries | *Packages* |
+
+---
+
+## Background
+
+### Why This Research?
+
+*Context leading to this RFC*
+
+### Current State
+
+```typescript
+// How things work now
+const current = "...";
+```
+
+### Problem Statement
+
+*What problem needs solving*
+
+---
+
+## Options Analysis
+
+### Option A: [Name]
+
+**Description**: *Brief explanation*
+
+```typescript
+const optionA = () => { /* ... */ };
+```
+
+**Pros**:
+- *Advantage 1*
+- *Advantage 2*
+
+**Cons**:
+- *Disadvantage 1*
+- *Disadvantage 2*
+
+**Evidence**: *Sources/proof*
+
+---
+
+### Option B: [Name]
+
+**Description**: *Brief explanation*
+
+```typescript
+const optionB = () => { /* ... */ };
+```
+
+**Pros**:
+- *Advantage 1*
+- *Advantage 2*
+
+**Cons**:
+- *Disadvantage 1*
+- *Disadvantage 2*
+
+**Evidence**: *Sources/proof*
+
+---
+
+## Comparison Matrix
+
+### Criteria
+
+| Criterion | Weight | Definition |
+|-----------|--------|------------|
+| Performance | High | Speed/efficiency |
+| Maintainability | High | Long-term ease |
+| Security | Critical | Security implications |
+| Complexity | Medium | Implementation difficulty |
+
+### Evaluation
+
+| Criterion | Weight | Option A | Option B |
+|-----------|--------|----------|----------|
+| Performance | High | Good | Medium |
+| Maintainability | High | Medium | Good |
+| Security | Critical | Good | Good |
+| Complexity | Medium | Low | Medium |
+| **Overall** | - | **8/10** | **7/10** |
+
+---
+
+## Risks & Considerations
+
+### Identified Risks
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| *Risk 1* | Medium | High | *Strategy* |
+
+### Security Considerations
+
+*Security implications*
+
+### Performance Considerations
+
+*Performance implications*
+
+---
+
+## Recommendation
+
+> **Recommendation**: Based on research, we recommend **Option [X]**.
+
+### Justification
+
+1. **Primary**: *Main argument*
+2. **Secondary**: *Supporting argument*
+
+### Trade-offs Accepted
+
+- *Trade-off 1*: Acceptable because *reason*
+
+### Implementation Guidance
+
+```typescript
+// Recommended approach
+const recommended = () => { /* ... */ };
+```
+
+### Prerequisites
+
+- [ ] *Prerequisite 1*
+- [ ] *Prerequisite 2*
+
+---
+
+## Future Considerations
+
+### Not Covered
+
+*Deferred topics*
+
+### Follow-up RFCs
+
+- **RFC-XX+1**: *Related topic*
+
+### Long-term Implications
+
+*1-2 year outlook*
+
+---
+
+## Open Questions
+
+- [ ] **Q1**: *Question*
+  - Owner: *Who*
+  - Impact: High/Medium/Low
+
+---
+
+## References
+
+### Documentation
+- [Link](https://example.com) - *Description*
+
+### Related
+- [ISSUE-XXX](./ISSUE-XXX.mdx) - *Related issue*
+
+---
+
+## Conclusion
+
+### Summary
+
+*2-3 sentence summary*
+
+### Next Steps
+
+1. [ ] Review with stakeholders
+2. [ ] Address open questions
+3. [ ] Create Implementation Plan
+4. [ ] Update parent Issue
+
+### Decision Record
+
+| Date | Decision | Approver |
+|------|----------|----------|
+| *YYYY-MM-DD* | *Decision* | *Name* |

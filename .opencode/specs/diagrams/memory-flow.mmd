@@ -1,0 +1,127 @@
+%% Memory and Context Flow
+%% File: .opencode/specs/diagrams/memory-flow.mmd
+%% Generated: 2026-01-07
+
+flowchart TB
+    subgraph Session["Agent Session"]
+        U[User Request]
+        A[Active Agent]
+        R[Response]
+    end
+
+    subgraph Memory["Persistent Memory (.opencode/memory/)"]
+        direction TB
+        PM[project.yaml<br/>Project metadata<br/>Structure, relationships]
+        PAT[patterns.yaml<br/>Learned patterns<br/>Preferences, anti-patterns]
+        ARCH[architecture.md<br/>System diagrams<br/>Component relationships]
+    end
+
+    subgraph Context["Session Context (.opencode/context/)"]
+        direction TB
+        SESS[session.yaml<br/>Current session state<br/>Active task, focus]
+        FOCUS[focus.md<br/>What we're working on<br/>Current objective]
+        DEC[decisions.log<br/>Decisions made<br/>Rationale]
+    end
+
+    subgraph Tasks["Task System (.opencode/tasks/)"]
+        direction TB
+        SPR[sprint.yaml<br/>Current sprint<br/>Committed work]
+        Q[queue/<br/>Ready tasks<br/>Claimable work]
+        ARC[archive/<br/>Completed tasks<br/>Historical record]
+    end
+
+    subgraph Skills["Skill System (.opencode/skill/)"]
+        direction TB
+        SK1[opencode-specs/]
+        SK2[code-review/]
+        SK3[rfc-creation/]
+        SK4[task-decomposition/]
+        SK5[codebase-analysis/]
+    end
+
+    %% Session flow
+    U --> A
+    A --> R
+
+    %% Memory reading (session start)
+    PM -->|"Load on start"| A
+    PAT -->|"Apply patterns"| A
+    ARCH -->|"Architecture context"| A
+
+    %% Context loading
+    SESS -->|"Resume state"| A
+    FOCUS -->|"Current focus"| A
+    SPR -->|"Sprint context"| A
+    Q -->|"Available work"| A
+
+    %% Skill loading
+    SK1 & SK2 & SK3 & SK4 & SK5 -->|"On demand"| A
+
+    %% Memory writing (learning)
+    A -->|"New pattern learned"| PAT
+    A -->|"Structure discovered"| PM
+    A -->|"Architecture change"| ARCH
+
+    %% Context writing
+    A -->|"Update state"| SESS
+    A -->|"Record decision"| DEC
+    A -->|"Update focus"| FOCUS
+
+    %% Task updates
+    A -->|"Complete task"| ARC
+    A -->|"Claim task"| Q
+
+    %% Styling
+    style U fill:#FFD700,stroke:#333,color:#000
+    style A fill:#9333EA,stroke:#333,color:#fff
+    style R fill:#10B981,stroke:#333,color:#fff
+
+    style PM fill:#60A5FA,stroke:#333,color:#000
+    style PAT fill:#60A5FA,stroke:#333,color:#000
+    style ARCH fill:#60A5FA,stroke:#333,color:#000
+
+    style SESS fill:#FBBF24,stroke:#333,color:#000
+    style FOCUS fill:#FBBF24,stroke:#333,color:#000
+    style DEC fill:#FBBF24,stroke:#333,color:#000
+
+    style SPR fill:#4ADE80,stroke:#333,color:#000
+    style Q fill:#4ADE80,stroke:#333,color:#000
+    style ARC fill:#4ADE80,stroke:#333,color:#000
+
+%% Memory Update Protocol
+%%
+%% | Trigger                          | Action                    | File           |
+%% |----------------------------------|---------------------------|----------------|
+%% | New project structure discovered | Update structure section  | project.yaml   |
+%% | User corrects agent behavior     | Add to preferences        | patterns.yaml  |
+%% | Anti-pattern identified          | Add to anti_patterns      | patterns.yaml  |
+%% | Architecture change              | Update diagrams           | architecture.md|
+%% | New technology adopted           | Add to technologies       | project.yaml   |
+
+%% Context vs Memory
+%%
+%% Memory = What we KNOW about the project (persistent)
+%%   - Project structure
+%%   - Learned patterns
+%%   - Architecture diagrams
+%%   - Relationships
+%%
+%% Context = What we're DOING right now (session)
+%%   - Current task
+%%   - Session state
+%%   - Decisions made
+%%   - Current focus
+
+%% Data Flow Summary
+%%
+%% 1. Session Start:
+%%    BOOTSTRAP.md → memory/*.yaml → context/*.yaml → Ready
+%%
+%% 2. During Work:
+%%    Request → Load Skills → Execute → Update Context
+%%
+%% 3. Pattern Learning:
+%%    Observation → Validation → Memory Update → Available Next Session
+%%
+%% 4. Task Completion:
+%%    queue/ → in_progress → done → archive/
