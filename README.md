@@ -3,7 +3,6 @@
 Um site interativo e romântico criado para celebrar momentos especiais e fazer um pedido inesquecível.
 
 ![Project Preview](assets/img/celebration.jpg)
-*(Substitua esta imagem por uma captura de tela do projeto se desejar)*
 
 ## 📖 Sobre o Projeto
 
