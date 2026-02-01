@@ -17,6 +17,8 @@
                         "primary": "#ee2b5b",
                         "background-light": "#f8f6f6",
                         "background-dark": "#181113",
+                        "soft-pink": "#ffb6c1",
+                        "bg-dark": "#0a0a0a",
                     },
                     fontFamily: {
                         "display": ["Be Vietnam Pro", "sans-serif"]
@@ -37,6 +39,8 @@
             padding: 10px 10px 30px 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         .polaroid:hover {
             transform: scale(1.05) rotate(0deg) !important;
@@ -47,6 +51,10 @@
         }
         .polaroid:hover img {
             transform: scale(1.02);
+        }
+        .polaroid .polaroid-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
         }
         .heart-beat {
             animation: heartbeat 1.5s infinite ease-in-out;
@@ -108,14 +116,6 @@
         .equalizer-bar.paused {
             animation-play-state: paused;
         }
-        .polaroid {
-            position: relative;
-            overflow: hidden;
-        }
-        .polaroid .absolute {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 0.5rem;
-        }
         @media (max-width: 768px) {
             #musicPlayer {
                 width: 320px;
@@ -142,9 +142,78 @@
                 justify-content: flex-end;
             }
         }
+        
+        /* === Estilos da página de Memórias === */
+        :root {
+            --polaroid-bg: #1a1a1a;
+            --soft-pink: #ffb6c1;
+        }
+        .polaroid-frame {
+            background: var(--polaroid-bg);
+            padding: 12px 12px 40px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            position: absolute;
+            z-index: 10;
+        }
+        .polaroid-frame:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            z-index: 50;
+            border-color: #ee2b5b; /* primary color */
+        }
+        .floating-heart {
+            position: absolute;
+            color: rgba(238, 43, 91, 0.15);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .canvas-area {
+            position: relative;
+            min-height: 800px;
+        }
+        
+        /* Ajustes mobile para polaroids */
+        @media (max-width: 768px) {
+            .canvas-area {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+                height: auto !important;
+                padding-bottom: 4rem;
+            }
+            
+            .polaroid-frame {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                transform: rotate(0deg) !important;
+                margin: 0 auto;
+            }
+            
+            /* Leve rotação para manter estilo mas menos caótico */
+            .polaroid-frame:nth-child(odd) {
+                transform: rotate(-2deg) !important;
+            }
+            
+            .polaroid-frame:nth-child(even) {
+                transform: rotate(2deg) !important;
+            }
+            
+            /* Fix para o fundo de coração grande no mobile */
+            .canvas-area > div.absolute.top-1\/2 {
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-white">
+<!-- SPA Container - Este conteúdo será substituído na navegação -->
+<div id="spa-content">
 <!-- Nav Bar -->
 <div class="relative flex w-full flex-col group/design-root overflow-x-hidden">
 <div class="layout-container flex h-full grow flex-col">
@@ -157,16 +226,27 @@
 </div>
 <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Nossa História</h2>
 </div>
+<!-- Menu Desktop -->
 <div class="hidden md:flex flex-1 justify-end gap-8">
 <div class="flex items-center gap-9">
-<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Linha do Tempo</a>
-<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Memórias</a>
-<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">O Pedido</a>
+<a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="memorias.html">Memórias</a>
 </div>
 </div>
-        </header>
+<!-- Menu Mobile (Hamburguer) -->
+<div class="md:hidden">
+<button class="text-white hover:text-primary transition-colors p-2" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</header>
 </div>
 </div>
+</div>
+</div>
+<!-- Menu Mobile Dropdown (fora do container com overflow) -->
+<div class="hidden md:hidden fixed top-16 left-0 right-0 bg-[#2d181c]/98 backdrop-blur-lg border-b border-primary/20 z-50 px-6 py-4" id="mobileMenu">
+<div class="flex flex-col gap-4 items-center justify-center text-center">
+<a class="text-white text-base font-medium leading-normal hover:text-primary transition-colors py-2" href="memorias.html">Memórias</a>
 </div>
 </div>
 <!-- Main Content -->
@@ -176,34 +256,34 @@
 <h4 class="text-[#b99da4] text-sm font-bold leading-normal tracking-[0.015em] px-4 py-2 text-center mb-8 uppercase">Momentos Especiais</h4>
 <div class="flex flex-wrap justify-center gap-8 md:gap-12 py-10">
 <!-- Polaroid 1 -->
-<div class="polaroid rotate-[-3deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid1.jpg', 'O começo de tudo...')">
+<div class="polaroid rotate-[-3deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid1.jpg', 'O começo de tudo...', 'Nossa primeira conversa no Instagram após se conhecer pelo Facebook Namoros kkk')">
 <div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple laughing together in a park" style='background-image: url("assets/img/polaroid1.jpg");'></div>
 <p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">O começo de tudo...</p>
-<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="polaroid-overlay absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 <span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
 </div>
 </div>
 <!-- Polaroid 2 -->
-<div class="polaroid rotate-[2deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid2.jpg', 'Nosso primeiro date')">
+<div class="polaroid rotate-[2deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid2.jpg', 'Nosso primeiro date', 'Claramente no bom e velho Barraquim Vip. Não foi exatamente o primeiro, mas foi o primeiro que teve foto kk.')">
 <div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple eating ice cream together" style='background-image: url("assets/img/polaroid2.jpg");'></div>
 <p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Nosso primeiro date</p>
-<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="polaroid-overlay absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 <span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
 </div>
 </div>
 <!-- Polaroid 3 -->
-<div class="polaroid rotate-[-1deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid3.jpg', 'Aquele pôr do sol')">
+<div class="polaroid rotate-[-1deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid3.jpg', 'Aquele pôr do sol', 'Bichinha réa, nem queria tirar foto no rolê na Beira Mar.')">
 <div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple watching the sunset" style='background-image: url("assets/img/polaroid3.jpg");'></div>
 <p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Aquele pôr do sol</p>
-<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="polaroid-overlay absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 <span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
 </div>
 </div>
 <!-- Polaroid 4 -->
-<div class="polaroid rotate-[4deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid4.jpg', 'Aventuras')">
+<div class="polaroid rotate-[4deg] w-48 h-60 dark:bg-zinc-800 cursor-pointer" onclick="openModal('assets/img/polaroid4.jpg', 'Aventuras', 'Depois de um ataque de caramelos e marimbondos e de caminhar feito a peste, sobrevivemos kkkk')">
 <div class="w-full h-4/5 bg-center bg-cover rounded-sm" data-alt="Couple dancing at a wedding" style='background-image: url("assets/img/polaroid4.jpg");'></div>
 <p class="text-black dark:text-zinc-300 text-xs mt-3 text-center italic">Aventuras</p>
-<div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="polaroid-overlay absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
 <span class="material-symbols-outlined text-white text-4xl">zoom_in</span>
 </div>
 </div>
@@ -259,17 +339,18 @@
 </div>
 </div>
 <!-- Image Modal (Hidden) -->
-<div class="hidden fixed inset-0 z-50 bg-background-dark/95 flex flex-col items-center justify-center p-4" id="imageModal">
-<div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
-<button class="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors" onclick="closeModal()">
-<span class="material-symbols-outlined text-4xl">close</span>
+<div class="hidden fixed inset-0 z-50 bg-background-dark/95 flex items-center justify-center p-4 md:p-8" id="imageModal">
+<!-- Botão de fechar fixo no topo da tela, sempre visível -->
+<button class="fixed top-4 right-4 z-[60] w-12 h-12 flex items-center justify-center bg-primary/80 hover:bg-primary rounded-full text-white shadow-lg transition-all" onclick="closeModal()">
+<span class="material-symbols-outlined text-3xl">close</span>
 </button>
-<div class="bg-[#2d181c]/95 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-primary/30 overflow-hidden p-4">
-<img id="modalImage" src="" alt="Foto ampliada" class="max-w-full max-h-[80vh] rounded-lg object-contain">
-<div class="mt-4 text-center">
-<h3 id="modalCaption" class="text-white text-xl font-bold mb-2"></h3>
-<p class="text-[#b99da4] text-sm">Um momento especial da nossa história</p>
+<div class="bg-[#2d181c]/95 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-primary/30 overflow-hidden p-4 md:p-6 max-w-lg w-full mx-4">
+<div class="flex justify-center">
+<img id="modalImage" src="" alt="Foto ampliada" class="max-w-full max-h-[50vh] md:max-h-[60vh] rounded-lg object-contain">
 </div>
+<div class="mt-4 md:mt-6 text-center">
+<h3 id="modalCaption" class="text-white text-lg md:text-xl font-bold mb-2"></h3>
+<p id="modalDescription" class="text-[#b99da4] text-sm md:text-base leading-relaxed">Um momento especial da nossa história</p>
 </div>
 </div>
 </div>
@@ -298,30 +379,10 @@
 <p class="text-white/40 text-sm italic">Feito com amor, para o meu amor.</p>
 </div>
 </footer>
-<!-- Interactive script for the 'No' button effect -->
-<!-- Added as requested by the description of the screen 'The No button should appear to dodge the cursor' -->
-<script>
-        const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const celebration = document.getElementById('celebration');
+</div>
+<!-- Fim do SPA Container -->
 
-        // Note: For actual interactivity, standard JS event listeners would be used.
-        // This script is to showcase the logic intended.
-        noBtn.addEventListener('mouseover', function() {
-            const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-            noBtn.style.zIndex = '100';
-        });
-
-        yesBtn.addEventListener('click', function() {
-            celebration.classList.remove('hidden');
-        });
-    </script>
-
-<!-- Floating Music Player -->
+<!-- Floating Music Player (FORA do SPA container - permanece entre navegações) -->
 <div class="fixed bottom-6 right-6 z-40" id="musicPlayerContainer">
     <button class="w-14 h-14 rounded-full bg-primary shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-110 transition-transform duration-300" id="playerToggle" onclick="togglePlayer()">
         <span class="material-symbols-outlined text-white text-3xl" id="toggleIcon">music_note</span>
@@ -369,44 +430,31 @@
                     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer active" onclick="playSong(0)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">At Last - Etta James</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">Etta James</p>
+                            <p class="text-white text-xs truncate">Join Me In Death</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">HIM</p>
                         </div>
                     </div>
                     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(1)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">Perfect - Ed Sheeran</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">Ed Sheeran</p>
+                            <p class="text-white text-xs truncate">Morena (Cover)</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Felipe Amorim</p>
                         </div>
                     </div>
                     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(2)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">Thinking Out Loud - Ed Sheeran</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">Ed Sheeran</p>
+                            <p class="text-white text-xs truncate">Here Without You</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">3 Doors Down</p>
                         </div>
                     </div>
                     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(3)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">All of Me - John Legend</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">John Legend</p>
+                            <p class="text-white text-xs truncate">The Kill (Bury Me)</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Thirty Seconds To Mars</p>
                         </div>
                     </div>
-                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(4)">
-                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">A Thousand Years - Christina Perri</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">Christina Perri</p>
-                        </div>
-                    </div>
-                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(5)">
-                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-white text-xs truncate">Can't Help Falling in Love - Elvis Presley</p>
-                            <p class="text-[#b99da4] text-[10px] truncate">Elvis Presley</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -414,21 +462,63 @@
     </div>
 </div>
 
+<audio id="audioPlayer" preload="auto" autoplay></audio>
+
 <script>
     const playlist = [
-        { title: "At Last", artist: "Etta James" },
-        { title: "Perfect", artist: "Ed Sheeran" },
-        { title: "Thinking Out Loud", artist: "Ed Sheeran" },
-        { title: "All of Me", artist: "John Legend" },
-        { title: "A Thousand Years", artist: "Christina Perri" },
-        { title: "Can't Help Falling in Love", artist: "Elvis Presley" }
+        { title: "Join Me In Death", artist: "HIM", file: "musicas/HIM - Join Me In Death.mp3" },    
+        { title: "Morena (Cover)", artist: "Felipe Amorim", file: "musicas/Felipe Amorim - Morena (Vitor Kley Cover - IA).mp3" },
+        { title: "Here Without You", artist: "3 Doors Down", file: "musicas/Here Without You - 3 Doors Down.mp3" },
+        { title: "The Kill (Bury Me)", artist: "Thirty Seconds To Mars", file: "musicas/The Kill Bury Me - Thirty Seconds To Mars.mp3" }
     ];
     
     let currentSong = 0;
     let isPlaying = false;
-    let isMuted = false;
-    let progress = 0;
-    let progressInterval;
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    // Configuração inicial do audio player
+    audioPlayer.volume = 0.5; // Volume inicial 50%
+    audioPlayer.src = playlist[currentSong].file;
+
+    // Tentar autoplay imediato
+    const playPromise = audioPlayer.play();
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+            // Autoplay started!
+            isPlaying = true;
+            updateVisuals(true);
+        }).catch(error => {
+            // Autoplay was prevented.
+            // Show a UI element to let the user manually start playback.
+            console.log("Autoplay bloqueado pelo navegador. Aguardando interação.");
+            isPlaying = false;
+            updateVisuals(false);
+        });
+    }
+    
+    // Event listeners para o audio player
+    audioPlayer.addEventListener('timeupdate', updateProgress);
+    audioPlayer.addEventListener('ended', nextSong);
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
+    });
+    
+    // Função auxiliar para atualizar visuais (play button, vinyl, equalizer)
+    function updateVisuals(playing) {
+        const playBtn = document.getElementById('playBtn');
+        const vinyl = document.getElementById('vinyl');
+        const bars = document.querySelectorAll('.equalizer-bar');
+        
+        if (playing) {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">pause</span>';
+            vinyl.classList.add('playing');
+            bars.forEach(bar => bar.classList.remove('paused'));
+        } else {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">play_arrow</span>';
+            vinyl.classList.remove('playing');
+            bars.forEach(bar => bar.classList.add('paused'));
+        }
+    }
 
     function togglePlayer() {
         const player = document.getElementById('musicPlayer');
@@ -446,21 +536,15 @@
     }
 
     function togglePlay() {
-        isPlaying = !isPlaying;
-        const playBtn = document.getElementById('playBtn');
-        const vinyl = document.getElementById('vinyl');
-        const bars = document.querySelectorAll('.equalizer-bar');
-        
-        if (isPlaying) {
-            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">pause</span>';
-            vinyl.classList.add('playing');
-            bars.forEach(bar => bar.classList.remove('paused'));
-            startProgress();
+        if (audioPlayer.paused) {
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                updateVisuals(true);
+            }).catch(e => console.error("Erro ao reproduzir:", e));
         } else {
-            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">play_arrow</span>';
-            vinyl.classList.remove('playing');
-            bars.forEach(bar => bar.classList.add('paused'));
-            stopProgress();
+            audioPlayer.pause();
+            isPlaying = false;
+            updateVisuals(false);
         }
     }
 
@@ -468,11 +552,12 @@
         currentSong = index;
         updateSongInfo();
         updatePlaylistActive();
-        if (!isPlaying) {
-            togglePlay();
-        }
-        progress = 0;
-        updateProgress();
+        
+        audioPlayer.src = playlist[currentSong].file;
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            updateVisuals(true);
+        }).catch(e => console.error("Erro ao reproduzir:", e));
     }
 
     function nextSong() {
@@ -486,9 +571,9 @@
     }
 
     function toggleMute() {
-        isMuted = !isMuted;
+        audioPlayer.muted = !audioPlayer.muted;
         const volumeIcon = document.getElementById('volumeIcon');
-        volumeIcon.textContent = isMuted ? 'volume_off' : 'volume_up';
+        volumeIcon.textContent = audioPlayer.muted ? 'volume_off' : 'volume_up';
     }
 
     function updateSongInfo() {
@@ -507,55 +592,63 @@
         });
     }
 
-    function startProgress() {
-        progressInterval = setInterval(() => {
-            progress += 0.5;
-            if (progress >= 100) {
-                nextSong();
-                progress = 0;
-            }
-            updateProgress();
-        }, 500);
-    }
-
-    function stopProgress() {
-        clearInterval(progressInterval);
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
     function updateProgress() {
-        document.getElementById('progressBar').value = progress;
-        const currentMinutes = Math.floor((progress / 100) * 3);
-        const currentSeconds = Math.floor(((progress / 100) * 3 * 60) % 60);
-        const totalMinutes = 3;
-        const totalSeconds = 0;
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
         
-        document.getElementById('currentTime').textContent = 
-            `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')}`;
-        document.getElementById('duration').textContent = 
-            `${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+        const current = audioPlayer.currentTime;
+        const duration = audioPlayer.duration || 0;
+        
+        if (duration > 0) {
+            const percent = (current / duration) * 100;
+            progressBar.value = percent;
+        }
+        
+        currentTimeEl.textContent = formatTime(current);
+        // durationEl é atualizado no loadedmetadata, mas por segurança:
+        if (duration > 0) durationEl.textContent = formatTime(duration);
     }
 
     document.getElementById('progressBar').addEventListener('input', (e) => {
-        progress = parseFloat(e.target.value);
-        updateProgress();
+        const percent = parseFloat(e.target.value);
+        const duration = audioPlayer.duration;
+        if (duration > 0) {
+            audioPlayer.currentTime = (percent / 100) * duration;
+        }
     });
 
-    // Autoplay ao carregar a página
+    // Autoplay ao carregar a página (pode ser bloqueado pelo navegador)
     window.addEventListener('load', function() {
-        // O player já está visível, só começar a tocar
         setTimeout(() => {
-            togglePlay();
+            // Tenta reproduzir automaticamente, mas navegadores modernos bloqueiam se não houver interação
+            // Vamos deixar pronto e tentar
+            // togglePlayer(); // REMOVIDO: Player não abre mais automaticamente
+            
+            // Tentativa de autoplay (provavelmente será bloqueada sem interação prévia)
+            // audioPlayer.play().catch(() => {
+            //    console.log("Autoplay bloqueado pelo navegador - aguardando interação do usuário");
+            // });
         }, 300);
     });
 
     // Image Modal Functions
-    function openModal(imageSrc, caption) {
+    function openModal(imageSrc, caption, description) {
         const modal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage');
         const modalCaption = document.getElementById('modalCaption');
+        const modalDescription = document.getElementById('modalDescription');
         
         modalImage.src = imageSrc;
         modalCaption.textContent = caption;
+        modalDescription.textContent = description || "Um momento especial da nossa história";
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
@@ -577,6 +670,191 @@
         if (e.target === this) {
             closeModal();
         }
+    });
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.remove('hidden');
+            menuBtn.innerHTML = '<span class="material-symbols-outlined text-2xl">close</span>';
+        } else {
+            mobileMenu.classList.add('hidden');
+            menuBtn.innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+        }
+    }
+
+    // Fechar menu mobile ao clicar em um link
+    document.querySelectorAll('#mobileMenu a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.add('hidden');
+            document.getElementById('mobileMenuBtn').innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+        });
+    });
+
+    // ========================================
+    // SISTEMA DE NAVEGAÇÃO SPA
+    // ========================================
+    
+    // Inicializa os event listeners da página atual (index)
+    function initIndexPage() {
+        // Script do botão "Não" que foge
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const celebration = document.getElementById('celebration');
+        
+        if (noBtn) {
+            noBtn.addEventListener('mouseover', function() {
+                const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
+                const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = x + 'px';
+                noBtn.style.top = y + 'px';
+                noBtn.style.zIndex = '100';
+            });
+        }
+
+        if (yesBtn && celebration) {
+            yesBtn.addEventListener('click', function() {
+                celebration.classList.remove('hidden');
+            });
+        }
+
+        // Modal de imagem
+        const imageModal = document.getElementById('imageModal');
+        if (imageModal) {
+            imageModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Menu mobile
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('hidden');
+                const menuBtn = document.getElementById('mobileMenuBtn');
+                if (menuBtn) {
+                    menuBtn.innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+                }
+            });
+        });
+    }
+
+    // Inicializa a página de memórias
+    function initMemoriasPage() {
+        // Nenhuma inicialização especial necessária por enquanto
+        console.log('Página Memórias carregada via SPA');
+    }
+
+    // Função para extrair o conteúdo do SPA de uma página HTML
+    function extractSpaContent(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const spaContent = doc.getElementById('spa-content');
+        return spaContent ? spaContent.innerHTML : null;
+    }
+
+    // Função principal de navegação SPA
+    async function navigateTo(url, pushState = true) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Falha ao carregar página');
+            
+            const html = await response.text();
+            const newContent = extractSpaContent(html);
+            
+            if (newContent) {
+                // Substitui o conteúdo do SPA container
+                document.getElementById('spa-content').innerHTML = newContent;
+                
+                // Scroll para o topo
+                window.scrollTo(0, 0);
+                
+                // Atualiza a URL
+                if (pushState) {
+                    history.pushState({ url: url }, '', url);
+                }
+                
+                // Inicializa scripts específicos da página
+                const pageName = url.split('/').pop().replace('.html', '') || 'index';
+                if (pageName === 'index' || pageName === '') {
+                    initIndexPage();
+                } else if (pageName === 'memorias') {
+                    initMemoriasPage();
+                }
+                
+                // Re-intercepta links após carregar novo conteúdo
+                interceptLinks();
+            } else {
+                // Fallback: navegação tradicional se não encontrar spa-content
+                window.location.href = url;
+            }
+        } catch (error) {
+            console.error('Erro na navegação SPA:', error);
+            // Fallback para navegação tradicional
+            window.location.href = url;
+        }
+    }
+
+    // Intercepta cliques em links internos
+    function interceptLinks() {
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            
+            // Verifica se é um link interno (não externo, não âncora)
+            if (href && 
+                !href.startsWith('http') && 
+                !href.startsWith('#') && 
+                !href.startsWith('mailto:') &&
+                (href.endsWith('.html') || href === 'index.html' || href === 'memorias.html')) {
+                
+                // Remove listener anterior (evita duplicatas)
+                link.removeEventListener('click', handleSpaClick);
+                link.addEventListener('click', handleSpaClick);
+            }
+        });
+    }
+
+    // Handler para cliques SPA
+    function handleSpaClick(e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        navigateTo(href);
+        
+        // Fecha menu mobile se aberto
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.innerHTML = '<span class="material-symbols-outlined text-2xl">menu</span>';
+            }
+        }
+    }
+
+    // Trata navegação com botões voltar/avançar do navegador
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.url) {
+            navigateTo(e.state.url, false);
+        } else {
+            navigateTo(window.location.pathname, false);
+        }
+    });
+
+    // Inicializa o SPA
+    document.addEventListener('DOMContentLoaded', function() {
+        // Salva o estado inicial
+        history.replaceState({ url: window.location.pathname }, '', window.location.pathname);
+        
+        // Intercepta links
+        interceptLinks();
+        
+        // Inicializa a página index
+        initIndexPage();
     });
 </script>
 </body></html>

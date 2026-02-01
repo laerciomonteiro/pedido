@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Memórias - Nossa História</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+    :root {
+        --primary: #ee2b5b;
+        --background-dark: #0a0a0a;
+        --polaroid-bg: #1a1a1a;
+        --soft-pink: #ffb6c1;
+    }
+    body {
+        background-color: var(--background-dark);
+        font-family: 'Be Vietnam Pro', sans-serif;
+        overflow-x: hidden;
+    }
+    .polaroid-frame {
+        background: var(--polaroid-bg);
+        padding: 12px 12px 40px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s ease;
+        position: absolute;
+        z-index: 10;
+    }
+    .polaroid-frame:hover {
+        transform: scale(1.1) rotate(0deg) !important;
+        z-index: 50;
+        border-color: var(--primary);
+    }
+    .floating-heart {
+        position: absolute;
+        color: rgba(238, 43, 91, 0.15);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .canvas-area {
+        position: relative;
+        min-height: 800px;
+    }
+    
+    /* Mobile adjustment for polaroids */
+    @media (max-width: 768px) {
+        .canvas-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            height: auto !important;
+            padding-bottom: 4rem;
+        }
+        
+        .polaroid-frame {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: rotate(0deg) !important;
+            margin: 0 auto;
+        }
+        
+        /* Slight rotation for mobile to keep style but less chaotic */
+        .polaroid-frame:nth-child(odd) {
+            transform: rotate(-2deg) !important;
+        }
+        
+        .polaroid-frame:nth-child(even) {
+            transform: rotate(2deg) !important;
+        }
+        
+        /* Fix for the large heart background on mobile */
+        .canvas-area > div.absolute.top-1\/2 {
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    /* Music Player Styles */
+    .music-player {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .music-player:hover {
+        transform: scale(1.02);
+    }
+    .player-progress::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        background: #ee2b5b;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(238,43,91,0.5);
+    }
+    .playlist-item {
+        transition: all 0.3s ease;
+    }
+    .playlist-item:hover {
+        background: rgba(238,43,91,0.2);
+    }
+    .playlist-item.active {
+        background: rgba(238,43,91,0.3);
+        border-left: 3px solid #ee2b5b;
+    }
+    .vinyl-spin {
+        animation: spin 3s linear infinite;
+        animation-play-state: paused;
+    }
+    .vinyl-spin.playing {
+        animation-play-state: running;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .equalizer-bar {
+        animation: equalize 0.5s ease-in-out infinite alternate;
+    }
+    .equalizer-bar:nth-child(1) { animation-delay: 0s; }
+    .equalizer-bar:nth-child(2) { animation-delay: 0.1s; }
+    .equalizer-bar:nth-child(3) { animation-delay: 0.2s; }
+    .equalizer-bar:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes equalize {
+        from { height: 4px; }
+        to { height: 16px; }
+    }
+    .equalizer-bar.paused {
+        animation-play-state: paused;
+    }
+    @media (max-width: 768px) {
+        #musicPlayer {
+            width: 320px;
+            right: 0;
+            bottom: 18rem;
+        }
+        #musicPlayerContainer {
+            bottom: 4;
+            right: 4;
+        }
+    }
+    @media (max-width: 480px) {
+        #musicPlayer {
+            width: calc(100vw - 2rem);
+            right: 1rem;
+            left: 1rem;
+            bottom: 5.5rem;
+        }
+        #musicPlayerContainer {
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+</style>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#ee2b5b",
+                    "soft-pink": "#ffb6c1",
+                    "bg-dark": "#0a0a0a",
+                },
+                fontFamily: {
+                    "display": ["Be Vietnam Pro", "sans-serif"]
+                }
+            },
+        },
+    }
+</script>
+</head>
+<body class="text-white selection:bg-primary selection:text-white">
+<!-- SPA Container - Este conteúdo será substituído na navegação -->
+<div id="spa-content">
+<header class="fixed top-0 left-0 w-full z-50 bg-bg-dark/80 backdrop-blur-md border-b border-white/10 px-6 md:px-20 py-4">
+<div class="max-w-[1200px] mx-auto flex items-center justify-center relative">
+<nav class="flex items-center absolute left-0">
+<a class="text-[10px] md:text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-1" href="index.html">
+<span class="material-symbols-outlined text-lg md:hidden">arrow_back</span>
+<span class="hidden md:inline">Linha do Tempo</span>
+<span class="md:hidden">Voltar</span>
+</a>
+</nav>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1">favorite</span>
+<span class="text-xl font-black tracking-tight uppercase">Memórias</span>
+</div>
+</div>
+</header>
+<div class="fixed inset-0 overflow-hidden pointer-events-none">
+<span class="material-symbols-outlined floating-heart text-8xl top-20 left-10 rotate-12">favorite</span>
+<span class="material-symbols-outlined floating-heart text-6xl top-1/3 right-20 -rotate-12">favorite</span>
+<span class="material-symbols-outlined floating-heart text-9xl bottom-20 left-1/4 rotate-45">favorite</span>
+<span class="material-symbols-outlined floating-heart text-7xl bottom-40 right-10 -rotate-12">favorite</span>
+</div>
+<main class="relative pt-32 pb-20 px-6">
+<div class="max-w-[800px] mx-auto text-center mb-16 relative z-10">
+<h4 class="text-soft-pink text-xs font-black uppercase tracking-[0.3em] mb-4">Galeria de Fotos</h4>
+<h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
+    Momentos que <span class="text-soft-pink italic">eternizamos</span> juntos
+</h1>
+<p class="text-white/60 text-lg max-w-xl mx-auto font-medium">
+    Cada clique guarda uma história, um riso e o motivo pelo qual eu escolhi você todos os dias.
+</p>
+</div>
+<div class="max-w-[1200px] mx-auto canvas-area">
+<div class="polaroid-frame w-64 h-80 top-[10%] left-[5%] rotate-[-6deg]">
+<div class="w-full h-[85%] bg-center bg-cover bg-zinc-900" style='background-image: url("assets/img/memoria1.jpg");'></div>
+<p class="text-white font-bold text-sm mt-4 text-center uppercase tracking-tighter">Noite inesquecível no 5 Elementos Pub</p>
+</div>
+<div class="polaroid-frame w-60 h-72 top-[40%] left-[25%] rotate-[8deg]">
+<div class="w-full h-[82%] bg-center bg-cover bg-zinc-900" style='background-image: url("assets/img/memoria2.jpg");'></div>
+<p class="text-white font-bold text-sm mt-4 text-center uppercase tracking-tighter">Virada de ano com direito a bando de Chandon rs</p>
+</div>
+<div class="polaroid-frame w-72 h-96 top-[5%] right-[20%] rotate-[4deg]">
+<div class="w-full h-[88%] bg-center bg-cover bg-zinc-900" style='background-image: url("assets/img/memoria3.jpg");'></div>
+<p class="text-white font-bold text-sm mt-4 text-center uppercase tracking-tighter">Uma baby linda! 😍​</p>
+</div>
+<div class="polaroid-frame w-64 h-80 bottom-[10%] right-[10%] rotate-[-12deg]">
+<div class="w-full h-[85%] bg-center bg-cover bg-zinc-900" style='background-image: url("assets/img/memoria4.jpg");'></div>
+<p class="text-white font-bold text-sm mt-4 text-center uppercase tracking-tighter">Curtindo os Ensaios do DF</p>
+</div>
+<div class="polaroid-frame w-56 h-72 top-[50%] left-[50%] -translate-x-1/2 rotate-[-2deg]">
+<div class="w-full h-[82%] bg-center bg-cover bg-zinc-900" style='background-image: url("assets/img/memoria5.jpg");'></div>
+<p class="text-white font-bold text-sm mt-4 text-center uppercase tracking-tighter">Farmando aura no Austin KKK</p>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[300px] text-primary" style="font-variation-settings: 'FILL' 1">favorite</span>
+</div>
+</div>
+</main>
+<footer class="w-full py-12 border-t border-white/5 bg-black/40 text-center">
+<p class="text-white/30 text-xs font-bold uppercase tracking-[0.4em]">Você é o meu melhor presente</p>
+</footer>
+</div>
+<!-- Fim do SPA Container -->
+
+<!-- Floating Music Player (FORA do SPA container - permanece entre navegações) -->
+<div class="fixed bottom-6 right-6 z-40" id="musicPlayerContainer">
+    <button class="w-14 h-14 rounded-full bg-primary shadow-lg shadow-primary/40 flex items-center justify-center hover:scale-110 transition-transform duration-300" id="playerToggle" onclick="togglePlayer()">
+        <span class="material-symbols-outlined text-white text-3xl" id="toggleIcon">music_note</span>
+    </button>
+    <div class="absolute bottom-20 right-0 w-80 music-player opacity-0 invisible pointer-events-none" id="musicPlayer">
+        <div class="bg-[#2d181c]/95 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/50 border border-primary/30 overflow-hidden">
+            <div class="p-4">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-pink-600 flex items-center justify-center vinyl-spin" id="vinyl">
+                        <div class="w-4 h-4 rounded-full bg-[#181113]"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-white font-bold text-sm truncate" id="songTitle">Música 1</h4>
+                        <p class="text-[#b99da4] text-xs truncate" id="artistName">Artista</p>
+                    </div>
+                    <div class="flex items-end gap-0.5 h-4" id="equalizer">
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                        <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-white/60 text-xs" id="currentTime">0:00</span>
+                    <input type="range" class="flex-1 h-1 bg-white/20 rounded-full appearance-none player-progress" id="progressBar" value="0" min="0" max="100">
+                    <span class="text-white/60 text-xs" id="duration">0:00</span>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="prevSong()">
+                        <span class="material-symbols-outlined">skip_previous</span>
+                    </button>
+                    <button class="w-12 h-12 rounded-full bg-primary flex items-center justify-center hover:scale-110 transition-transform" id="playBtn" onclick="togglePlay()">
+                        <span class="material-symbols-outlined text-white">play_arrow</span>
+                    </button>
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="nextSong()">
+                        <span class="material-symbols-outlined">skip_next</span>
+                    </button>
+                    <button class="text-white/70 hover:text-primary transition-colors" onclick="toggleMute()">
+                        <span class="material-symbols-outlined" id="volumeIcon">volume_up</span>
+                    </button>
+                </div>
+            </div>
+            <div class="max-h-48 overflow-y-auto" id="playlistContainer">
+                <div class="p-2 space-y-1" id="playlist">
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer active" onclick="playSong(0)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Join Me In Death</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">HIM</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(1)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Morena (Cover)</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Felipe Amorim</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(2)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">Here Without You</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">3 Doors Down</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(3)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">The Kill (Bury Me)</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Thirty Seconds To Mars</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<audio id="audioPlayer" preload="auto" autoplay></audio>
+
+<script>
+    const playlist = [
+        { title: "Join Me In Death", artist: "HIM", file: "musicas/HIM - Join Me In Death.mp3" },    
+        { title: "Morena (Cover)", artist: "Felipe Amorim", file: "musicas/Felipe Amorim - Morena (Vitor Kley Cover - IA).mp3" },
+        { title: "Here Without You", artist: "3 Doors Down", file: "musicas/Here Without You - 3 Doors Down.mp3" },
+        { title: "The Kill (Bury Me)", artist: "Thirty Seconds To Mars", file: "musicas/The Kill Bury Me - Thirty Seconds To Mars.mp3" }
+    ];
+    
+    let currentSong = 0;
+    let isPlaying = false;
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    // Configuração inicial do audio player
+    audioPlayer.volume = 0.5; // Volume inicial 50%
+    audioPlayer.src = playlist[currentSong].file;
+
+    // Tentar autoplay imediato
+    const playPromise = audioPlayer.play();
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+            // Autoplay started!
+            isPlaying = true;
+            updateVisuals(true);
+        }).catch(error => {
+            // Autoplay was prevented.
+            console.log("Autoplay bloqueado pelo navegador. Aguardando interação.");
+            isPlaying = false;
+            updateVisuals(false);
+        });
+    }
+    
+    // Event listeners para o audio player
+    audioPlayer.addEventListener('timeupdate', updateProgress);
+    audioPlayer.addEventListener('ended', nextSong);
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
+    });
+    
+    // Função auxiliar para atualizar visuais (play button, vinyl, equalizer)
+    function updateVisuals(playing) {
+        const playBtn = document.getElementById('playBtn');
+        const vinyl = document.getElementById('vinyl');
+        const bars = document.querySelectorAll('.equalizer-bar');
+        
+        if (playing) {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">pause</span>';
+            vinyl.classList.add('playing');
+            bars.forEach(bar => bar.classList.remove('paused'));
+        } else {
+            playBtn.innerHTML = '<span class="material-symbols-outlined text-white">play_arrow</span>';
+            vinyl.classList.remove('playing');
+            bars.forEach(bar => bar.classList.add('paused'));
+        }
+    }
+
+    function togglePlayer() {
+        const player = document.getElementById('musicPlayer');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (player.classList.contains('opacity-0')) {
+            player.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+            player.classList.add('opacity-100', 'visible', 'pointer-events-auto');
+            toggleIcon.textContent = 'close';
+        } else {
+            player.classList.remove('opacity-100', 'visible', 'pointer-events-auto');
+            player.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+            toggleIcon.textContent = 'music_note';
+        }
+    }
+
+    function togglePlay() {
+        if (audioPlayer.paused) {
+            audioPlayer.play().then(() => {
+                isPlaying = true;
+                updateVisuals(true);
+            }).catch(e => console.error("Erro ao reproduzir:", e));
+        } else {
+            audioPlayer.pause();
+            isPlaying = false;
+            updateVisuals(false);
+        }
+    }
+
+    function playSong(index) {
+        currentSong = index;
+        updateSongInfo();
+        updatePlaylistActive();
+        
+        audioPlayer.src = playlist[currentSong].file;
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            updateVisuals(true);
+        }).catch(e => console.error("Erro ao reproduzir:", e));
+    }
+
+    function nextSong() {
+        currentSong = (currentSong + 1) % playlist.length;
+        playSong(currentSong);
+    }
+
+    function prevSong() {
+        currentSong = (currentSong - 1 + playlist.length) % playlist.length;
+        playSong(currentSong);
+    }
+
+    function toggleMute() {
+        audioPlayer.muted = !audioPlayer.muted;
+        const volumeIcon = document.getElementById('volumeIcon');
+        volumeIcon.textContent = audioPlayer.muted ? 'volume_off' : 'volume_up';
+    }
+
+    function updateSongInfo() {
+        document.getElementById('songTitle').textContent = playlist[currentSong].title;
+        document.getElementById('artistName').textContent = playlist[currentSong].artist;
+    }
+
+    function updatePlaylistActive() {
+        const items = document.querySelectorAll('.playlist-item');
+        items.forEach((item, index) => {
+            if (index === currentSong) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateProgress() {
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        
+        const current = audioPlayer.currentTime;
+        const duration = audioPlayer.duration || 0;
+        
+        if (duration > 0) {
+            const percent = (current / duration) * 100;
+            progressBar.value = percent;
+        }
+        
+        currentTimeEl.textContent = formatTime(current);
+        if (duration > 0) durationEl.textContent = formatTime(duration);
+    }
+
+    document.getElementById('progressBar').addEventListener('input', (e) => {
+        const percent = parseFloat(e.target.value);
+        const duration = audioPlayer.duration;
+        if (duration > 0) {
+            audioPlayer.currentTime = (percent / 100) * duration;
+        }
+    });
+
+    // Autoplay ao carregar a página
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            // togglePlayer(); // REMOVIDO: Player não abre mais automaticamente
+        }, 300);
+    });
+
+    // ========================================
+    // SISTEMA DE NAVEGAÇÃO SPA
+    // ========================================
+    
+    // Função para extrair o conteúdo do SPA de uma página HTML
+    function extractSpaContent(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const spaContent = doc.getElementById('spa-content');
+        return spaContent ? spaContent.innerHTML : null;
+    }
+
+    // Função principal de navegação SPA
+    async function navigateTo(url, pushState = true) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Falha ao carregar página');
+            
+            const html = await response.text();
+            const newContent = extractSpaContent(html);
+            
+            if (newContent) {
+                // Substitui o conteúdo do SPA container
+                document.getElementById('spa-content').innerHTML = newContent;
+                
+                // Scroll para o topo
+                window.scrollTo(0, 0);
+                
+                // Atualiza a URL
+                if (pushState) {
+                    history.pushState({ url: url }, '', url);
+                }
+                
+                // Re-intercepta links após carregar novo conteúdo
+                interceptLinks();
+            } else {
+                // Fallback: navegação tradicional se não encontrar spa-content
+                window.location.href = url;
+            }
+        } catch (error) {
+            console.error('Erro na navegação SPA:', error);
+            // Fallback para navegação tradicional
+            window.location.href = url;
+        }
+    }
+
+    // Intercepta cliques em links internos
+    function interceptLinks() {
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            
+            // Verifica se é um link interno (não externo, não âncora)
+            if (href && 
+                !href.startsWith('http') && 
+                !href.startsWith('#') && 
+                !href.startsWith('mailto:') &&
+                (href.endsWith('.html') || href === 'index.html' || href === 'memorias.html')) {
+                
+                // Remove listener anterior (evita duplicatas)
+                link.removeEventListener('click', handleSpaClick);
+                link.addEventListener('click', handleSpaClick);
+            }
+        });
+    }
+
+    // Handler para cliques SPA
+    function handleSpaClick(e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        navigateTo(href);
+    }
+
+    // Trata navegação com botões voltar/avançar do navegador
+    window.addEventListener('popstate', function(e) {
+        if (e.state && e.state.url) {
+            navigateTo(e.state.url, false);
+        } else {
+            navigateTo(window.location.pathname, false);
+        }
+    });
+
+    // Inicializa o SPA
+    document.addEventListener('DOMContentLoaded', function() {
+        // Salva o estado inicial
+        history.replaceState({ url: window.location.pathname }, '', window.location.pathname);
+        
+        // Intercepta links
+        interceptLinks();
+    });
+</script>
+</body></html>
