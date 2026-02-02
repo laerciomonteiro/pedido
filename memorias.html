@@ -255,8 +255,8 @@
                         <div class="w-4 h-4 rounded-full bg-[#181113]"></div>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="text-white font-bold text-sm truncate" id="songTitle">Música 1</h4>
-                        <p class="text-[#b99da4] text-xs truncate" id="artistName">Artista</p>
+                        <h4 class="text-white font-bold text-sm truncate" id="songTitle">Join Me In Death</h4>
+                        <p class="text-[#b99da4] text-xs truncate" id="artistName">HIM</p>
                     </div>
                     <div class="flex items-end gap-0.5 h-4" id="equalizer">
                         <div class="equalizer-bar w-1 bg-primary rounded-full paused"></div>
@@ -297,24 +297,30 @@
                     <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(1)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
+                            <p class="text-white text-xs truncate">You Are the Right One</p>
+                            <p class="text-[#b99da4] text-[10px] truncate">Sports</p>
+                        </div>
+                    </div>
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(2)">
+                        <span class="material-symbols-outlined text-primary text-sm">favorite</span>
+                        <div class="flex-1 min-w-0">
                             <p class="text-white text-xs truncate">Morena (Cover)</p>
                             <p class="text-[#b99da4] text-[10px] truncate">Felipe Amorim</p>
                         </div>
                     </div>
-                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(2)">
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(3)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
                             <p class="text-white text-xs truncate">Here Without You</p>
                             <p class="text-[#b99da4] text-[10px] truncate">3 Doors Down</p>
                         </div>
                     </div>
-                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(3)">
+                    <div class="playlist-item flex items-center gap-3 p-2 rounded-lg cursor-pointer" onclick="playSong(4)">
                         <span class="material-symbols-outlined text-primary text-sm">favorite</span>
                         <div class="flex-1 min-w-0">
                             <p class="text-white text-xs truncate">The Kill (Bury Me)</p>
                             <p class="text-[#b99da4] text-[10px] truncate">Thirty Seconds To Mars</p>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -326,7 +332,8 @@
 
 <script>
     const playlist = [
-        { title: "Join Me In Death", artist: "HIM", file: "musicas/HIM - Join Me In Death.mp3" },    
+        { title: "Join Me In Death", artist: "HIM", file: "musicas/HIM - Join Me In Death.mp3" },
+        { title: "You Are the Right One", artist: "Sports", file: "musicas/You Are the Right One - Sports.mp3" },
         { title: "Morena (Cover)", artist: "Felipe Amorim", file: "musicas/Felipe Amorim - Morena (Vitor Kley Cover - IA).mp3" },
         { title: "Here Without You", artist: "3 Doors Down", file: "musicas/Here Without You - 3 Doors Down.mp3" },
         { title: "The Kill (Bury Me)", artist: "Thirty Seconds To Mars", file: "musicas/The Kill Bury Me - Thirty Seconds To Mars.mp3" }
